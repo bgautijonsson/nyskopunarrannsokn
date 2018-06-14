@@ -383,3 +383,67 @@ df %>%
       scroll_box(height = "600px")
 ```
 
+## Fræðilegur grunnur
+
+### Einföld líkön fyrir biðtíma
+Látum $N(s,t)$ tákna fjölda tilfella af atburði yfr tímabil $(s, t]$ fyrir einstakling. Gerum ráð fyrir að talning hefst á tíma $t = 0$ þar sem $N(0) = 0$ og skilgreinum $N(t) = N(0, t)$ þar sem $t > 0$. Ferlið $\{N(t), 0 \leq t \}$ kallast þá talningarferli atburðs.
+
+Skilgreinum sögufall atburðarrásar $H(t)$ þannig að
+$$
+H(t) = \{N(s): 0 \leq s < t\} \quad t > 0,
+$$
+og táknum fjölda tilfella af atburði  á tímabili $[t, t + \Delta)$ með $\Delta N(t) = N(t + \Delta t^-) - N(t^-)$
+
+Skilgreinum biðtíma $W_j = T_j - T_{j-1}$, $j = (1, 2, \ldots)$ þar sem $T_k$ er tíminn þegar atburður $k$ átti sér stað. Endurnýjunarferli (e. renewal process) er ferli þar sem biðtímar $W_j$ milli atburða eru óháðir og eindreifðir.
+
+Þetta jafngildir skilyrðinu að intensity fallið sé
+\begin{equation}
+\lambda(t|H(t)) = h(B(t)) \quad t > 0.
+\end{equation}
+Hér er $B(t)$ tíminn síðan síðasti atburður átti sér stað, það er, $B(t) = t - T_{N(t^-)}$ og $h(w))$ er hættufall (e. hazard function) $W_j$.
+
+Þar sem $W_j$ eru einsdreifðar og óháðar slembistærðir hafa þau öll sama þéttifall $f(w)$ og lifunarfall $S(w) = \mathbb{P}(W \geq w)$ og
+\begin{equation}
+h(w) = \frac{f(w)}{S(w)} = \lim _{\Delta w \to 0} \frac{\mathbb{P}(W < w + \Delta w| W \geq w)}{\Delta w}
+\end{equation}
+
+Þar sem biðtímar $W_j$ eru jákvæðar stærðir er hægt að meta endurnýjunarferli með tvennskonar líkönum:
+
+* *Proportional hazard* líkan þar sem hættufall $W_j$ fyrir gefnar skýribreytur $z$ (óháðar tíma) er 
+$$
+h(w|z) = h_0(w)\exp (z^T\beta),
+$$
+
+* *Accelerated failure time model* þar sem hættufallið er
+$$
+h(w|z) = h_0(we^{z^T \beta}) \exp(z^T\beta)
+$$
+
+Í báðum tilfellum er $h_0(w)$ grunnhættufallið.
+
+Ef einhverjar skýribreytur eru háðar tíma, það er, $z(t)$ er hægt að hugleiða endurnýjunarferli með intensity fall
+$$
+\lambda(t|H(t)) = h(B(t)|z(t)).
+$$
+Hættufallið verður þá
+$$
+h(w|z(t)) = h_0(w)\exp(z^T(t)\beta),
+$$
+
+þar sem $t = w + t_{N(t^-)}$. Hér er aftur gert ráð fyrir því að $W_j$ séu óháðar slembistærðir en þær þurfa hins vegar ekki að vera einsdreifðar.
+
+Forsendan um einsdreifða biðtíma er fullsterk. 
+
+1. Skilgreinum $Y_i = \log(W_j)$ fyrir $W_j$ gefið $W_1, \ldots , W_{j-1}$ og skýribreytu $z$ (óháð tíma). Þá er $W_j$ sögð vera log-normaldreifð, skilyrt á fyrri biðtíma og skýribreytur.
+
+2. Ef við leyfum $z(t)$ að innihalda fyrri biðtíma eða fjölda fyrri atburða. Þá er $w = B(t)$ sá tími sem hefur liðið frá síðasta atburði 
+
+Ef við gerum ráð fyrir því að $W_j$ er slembistærð skilyrt á $W_1, W_2, \ldots , W_{j-1}$ og $z$ er hentugt að skilgreina $Y_j = \log (W_j)$
+
+To-do:
+
+1. Skilgreina talningarferli
+2. Nefna líkön sem gera ekki ráð fyrir einsdreifðum $W_j$
+3. Nefna random effects líkön.
+4. Nefna líkön þar sem $W_j$ eru ekki óháð
+4. Búa til spurningarlista fyrir Thor, Sigrúnu, Ragnar.
