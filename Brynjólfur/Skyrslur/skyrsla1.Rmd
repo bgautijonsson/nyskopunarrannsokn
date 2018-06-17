@@ -476,45 +476,6 @@ g2 <- df_graph_2 %>%
 grid.arrange(g1, g2, ncol = 2)
 ```
 
-
-
-# Afbrigðileg gögn
-
-## Aldur = 0
-
-Sjúklingar hér hafa allir *aldur = 0* og ICD yfirkóðann `Z76` eða *Einstaklingar eiga samskipti við heilbrigðisþjónustu við aðrar aðstæður*. Við nánari athugun eru þetta kóðarnir `Z76.2` *(Heilbrigðiseftirlit annars heilbrigðs ungbarns og barns)*, `Z76.3` *(Heilbrigður einstaklingur fylgir sjúklingi )*, `Z38` *(Lifandi fædd ungbörn eftir fæðingarstað)* og *NA*. Við ættum því að geta filterar út þessi 100 tilvik úr gagnasettinu.
-```{r}
-df %>%
-      group_by(id) %>%
-      nest %>%
-      mutate(truth = map(data, ~ any(.$aldur <= 0))) %>%
-      unnest(truth) %>%
-      filter(truth == TRUE) %>%
-      select(-truth) %>%
-      unnest(data) %>%
-      kable() %>%
-      kable_styling() %>%
-      scroll_box(height = "600px")
-```
-
-## Neikvætt timi_milli
-
-Tveir sjúklingar hérna sem hafa stundum neikvætt `timi_milli`. Þetta virðist vera sökum einhverra flutninga milli deilda. ID 8028 leggst t.d. inn í eitt úrræði 2012-05-01 og út 2013-11-01. Þess á milli lá sjúklingurinn inni á þremur öðrum deildum og útskrifaðist frá þeim líka. Getum reynt að handlaga þetta, eða þá bara eða þessum sjúklingum.
-
-```{r}
-df %>%
-      group_by(id) %>%
-      nest %>%
-      mutate(truth = map(data, ~ any(.$timi_milli < 0))) %>%
-      unnest(truth) %>%
-      filter(truth == TRUE) %>%
-      select(-truth) %>%
-      unnest(data) %>%
-      kable() %>%
-      kable_styling() %>%
-      scroll_box(height = "600px")
-```
-
 ## Dreifing bráðra endurinnlagna sem hlutfall af heildarfjölda innlagna fyrir greiningarpör (fyrsta og)
 
 ```{r, fig.width = 12, fig.height = 6}
@@ -568,6 +529,43 @@ df %>%
       ggplot(aes(plot_var, ratio)) +
       geom_col() +
       coord_flip()
+```
+
+# Afbrigðileg gögn
+
+## Aldur = 0
+
+Sjúklingar hér hafa allir *aldur = 0* og ICD yfirkóðann `Z76` eða *Einstaklingar eiga samskipti við heilbrigðisþjónustu við aðrar aðstæður*. Við nánari athugun eru þetta kóðarnir `Z76.2` *(Heilbrigðiseftirlit annars heilbrigðs ungbarns og barns)*, `Z76.3` *(Heilbrigður einstaklingur fylgir sjúklingi )*, `Z38` *(Lifandi fædd ungbörn eftir fæðingarstað)* og *NA*. Við ættum því að geta filterar út þessi 100 tilvik úr gagnasettinu.
+```{r}
+df %>%
+      group_by(id) %>%
+      nest %>%
+      mutate(truth = map(data, ~ any(.$aldur <= 0))) %>%
+      unnest(truth) %>%
+      filter(truth == TRUE) %>%
+      select(-truth) %>%
+      unnest(data) %>%
+      kable() %>%
+      kable_styling() %>%
+      scroll_box(height = "600px")
+```
+
+## Neikvætt timi_milli
+
+Tveir sjúklingar hérna sem hafa stundum neikvætt `timi_milli`. Þetta virðist vera sökum einhverra flutninga milli deilda. ID 8028 leggst t.d. inn í eitt úrræði 2012-05-01 og út 2013-11-01. Þess á milli lá sjúklingurinn inni á þremur öðrum deildum og útskrifaðist frá þeim líka. Getum reynt að handlaga þetta, eða þá bara eða þessum sjúklingum.
+
+```{r}
+df %>%
+      group_by(id) %>%
+      nest %>%
+      mutate(truth = map(data, ~ any(.$timi_milli < 0))) %>%
+      unnest(truth) %>%
+      filter(truth == TRUE) %>%
+      select(-truth) %>%
+      unnest(data) %>%
+      kable() %>%
+      kable_styling() %>%
+      scroll_box(height = "600px")
 ```
 
 
