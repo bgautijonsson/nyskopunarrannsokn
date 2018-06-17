@@ -28,7 +28,7 @@ options(knitr.table.format = "html")
 Í töflunni fyrir neðan er hægt að scrolla upp/niður og vinstri/hægri til að skoða gögnin.
 
 ```{r lesaGogn}
-df <- read_xlsx("../Gögn/data_all.xlsx", 
+df <- read_xlsx("Gögn/data_all.xlsx", 
                 col_types = c(rep("text", 5), "numeric", rep("text", 4), 
                               rep("date", 2), "numeric", rep("text", 4))) %>%
       set_names(c("id", "kyn", "rikisfang", "postnr", "land", "aldur", "hjuskap", "kodi_kringumstaedur", "kringumstaedur",
@@ -383,9 +383,14 @@ df %>%
       scroll_box(height = "600px")
 ```
 
+### Spurningar
+
+1. Hver er dreifing fjölda atburðanna?
+2. Hver er líkurnar á því að atburður eigi sér stað fyrir gefna sögu?
+
 ## Fræðilegur grunnur
 
-### Einföld líkön fyrir biðtíma
+### Talningaferli, sögufall og magnfall
 Látum $N(s,t)$ tákna fjölda tilfella af atburði yfr tímabil $(s, t]$ fyrir einstakling. Gerum ráð fyrir að talning hefst á tíma $t = 0$ þar sem $N(0) = 0$ og skilgreinum $N(t) = N(0, t)$ þar sem $t > 0$. Ferlið $\{N(t), 0 \leq t \}$ kallast þá talningarferli atburðs.
 
 Skilgreinum sögufall atburðarrásar $H(t)$ þannig að
@@ -393,6 +398,12 @@ $$
 H(t) = \{N(s): 0 \leq s < t\} \quad t > 0,
 $$
 og táknum fjölda tilfella af atburði  á tímabili $[t, t + \Delta)$ með $\Delta N(t) = N(t + \Delta t^-) - N(t^-)$
+
+Fyrir atburði sem eiga sér stað í samfelldum tíma gerum við ráð fyrir því að tveir atburðir geta ekki átt sér stað samtímis. Magnfall $\lambda(t|H(t))$ atburða er skilgreint sem
+$$
+\lambda(t|H(t)) = \lim _{\Delta t \to 0} \frac{\mathbb{P}(\Delta N(t) = 1|H(t))}{\Delta t}.
+$$
+Það er, magnfallið gefur líkindin á því að atburður eigi sér stað á tíma $t$, skilyrt á sögu ferlsins. Magnfallið mun skilgreina ferli atburða og öll einkenni ferla má ákvarða frá því.
 
 Skilgreinum biðtíma $W_j = T_j - T_{j-1}$, $j = (1, 2, \ldots)$ þar sem $T_k$ er tíminn þegar atburður $k$ átti sér stað. Endurnýjunarferli (e. renewal process) er ferli þar sem biðtímar $W_j$ milli atburða eru óháðir og eindreifðir.
 

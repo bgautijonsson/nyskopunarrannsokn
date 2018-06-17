@@ -24,7 +24,10 @@ theme_set(ggthemes::theme_tufte(base_size = 14) +
 options(knitr.table.format = "html")
 ```
 
-
+---
+title: ""
+output: html_notebook
+---
 # Lesa gögn
 
 Eftirfarandi kóði er notaður til að lesa inn gögnin og undirbúa flestar breytur. Ítarlegri lýsing á honum getur fylgt síðar.
