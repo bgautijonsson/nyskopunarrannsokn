@@ -1,3 +1,14 @@
+add_surv <- function(df, n_fail = "n_fail", n_risk = "n_risk") {
+      out <- vector("numeric", nrow(df))
+      out[1] <- 1 - df[[n_fail]][1] / df[[n_risk]][1]
+      for (i in seq(2, nrow(df))) {
+            out[i] <- 1 - df[[n_fail]][i] / df[[n_risk]][i]
+            out[i] <- out[i] * out[i - 1]
+      }
+      
+      df %>% mutate(surv = out)
+}
+
 surv_plot <- function(variable, min_num = 100) {
       df %>% 
             filter(!grepl("sjúkrahúss", afdrif),
@@ -12,20 +23,24 @@ surv_plot <- function(variable, min_num = 100) {
             summarize(num_fail = n()) %>%
             ungroup %>%
             spread(censor, num_fail, fill = 0) %>%
-            set_names(c("time", "total", variable, "fail", "censor")) %>%
-            select(time, fail, censor, total, variable) %>%
+            set_names(c("time", "n_risk", variable, "n_fail", "n_censor")) %>%
+            select(time, n_fail, n_censor, n_risk, variable) %>%
             group_by_(variable) %>%
-            mutate(total_fail = cumsum(fail),
-                   total_censor = cumsum(censor),
-                   total = total - cumsum(lag(censor, default = 0)),
-                   s = 1 - total_fail / total) %>%
-            ggplot(aes_string("time", "s", col = variable)) +
+            mutate(total_fail = cumsum(n_fail),
+                   total_censor = cumsum(n_censor),
+                   n_risk = n_risk - cumsum(lag(n_censor, default = 0)) - cumsum(lag(n_fail, default = 0))) %>%
+            nest %>%
+            mutate(data = map(data, add_surv)) %>%
+            unnest %>%
+            ggplot(aes_string("time", "surv", col = variable)) +
             geom_line() +
             scale_y_continuous(labels = scales::percent) +
             theme(legend.position = "top") +
             labs(x = "Dagar síðan útskrifaðist",
                  y = "Hlutfall sjúklinga sem eiga eftir að leggjast aftur inn",
                  title = "Lifunarmyndrit",
-                 subttle = str_to_title(variable))
+                 subtitle = str_to_title(variable))
 }
-surv_plot("postnr", min_num = 100)
+surv_plot("kringumstaedur", min_num = 100)
+
+
